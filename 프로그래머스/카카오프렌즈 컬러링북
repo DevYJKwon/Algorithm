@@ -1,0 +1,62 @@
+#include <vector>
+#include <queue>
+#include <algorithm>
+
+
+#define MAX 2^31-1
+using namespace std;
+
+int dx[] ={0 ,1,0,-1};
+int dy[] ={1,0,-1,0};
+
+vector<int> solution(int m, int n, vector<vector<int>> picture) {
+    int number_of_area = 0;
+    int max_size_of_one_area = 0;
+    
+    //true 이미 체크 , false 아직 체크 x
+    bool **exist=new bool*[m];
+    for(int i=0; i<m; i++){
+        exist[i]=new bool[n]{false,};
+    }
+    
+    
+    for(int y=0; y<picture.size(); y++){
+        for(int x=0; x<picture[y].size(); x++){
+            //bfs
+            if(!exist[y][x] && picture[y][x]!=0){
+                int count=1;
+                queue <pair<int,int>> q;
+                q.push(make_pair(y,x));
+                exist[y][x]=true;
+                while(!q.empty()){
+                    int y = q.front().first;
+                    int x=q.front().second;
+                    q.pop();
+                    for(int d=0; d<4; d++){
+                        int ny=dy[d]+y;
+                        int nx=dx[d]+x;
+                        if(!exist[ny][nx] && ny>=0 && nx>=0 && ny<m && nx <n 
+                           && picture[ny][nx]==picture[y][x]){
+                            q.push(make_pair(ny,nx));
+                            count++;
+                            exist[ny][nx]=true;
+                        }
+                    }
+                }
+
+                number_of_area++;
+                max_size_of_one_area=max(max_size_of_one_area,count);
+            }
+        }
+    }
+    
+    vector<int> answer(2);
+    answer[0] = number_of_area;
+    answer[1] = max_size_of_one_area;
+    
+    for(int i=0; i<m; i++){
+        delete [] exist[i];
+    }
+    delete[] exist;
+    return answer;
+}
