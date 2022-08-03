@@ -1,6 +1,6 @@
 using namespace std;
 
-int gcd(int w, int h){
+int gcd(int w, int h){ //유클리드 호제법을 이용한 최대공약수 구하기
     int c;
     while(h!=0){
         c = w%h;
